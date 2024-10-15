@@ -1,6 +1,6 @@
 // Покемоны
-const pikachu = {
-    name: 'Pikachu',
+const character = {
+    name: '',
     health: 100,
     attack: function() {
         return Math.floor(Math.random() * 10) + 5;
@@ -10,16 +10,11 @@ const pikachu = {
     }
 };
 
-const charmander = {
-    name: 'Charmander',
-    health: 100,
-    attack: function() {
-        return Math.floor(Math.random() * 10) + 5;
-    },
-    specialAttack: function() {
-        return Math.floor(Math.random() * 20) + 10;
-    }
-};
+const pikachu = Object.create(character);
+pikachu.name = 'Pikachu';
+
+const charmander = Object.create(character);
+charmander.name = 'Charmander';
 
 // Флаг для предотвращения повторной атаки во время анимации
 let isAttacking = false;

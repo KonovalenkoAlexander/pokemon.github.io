@@ -1,3 +1,5 @@
+
+
 // Покемоны
 const character = {
     name: '',
@@ -65,7 +67,7 @@ function showPokeball(attackerId, targetId) {
     }, 800);
 }
 
-// Универсальная функция для боя
+// Универсальная функция для боя и обновления лога
 function battle(attacker, defender, healthBarDefender, attackerId, targetId) {
     if (isAttacking) return; // Если анимация еще идет, блокируем атаку
     isAttacking = true; // Блокируем новую атаку до завершения текущей
@@ -73,6 +75,7 @@ function battle(attacker, defender, healthBarDefender, attackerId, targetId) {
     const damage = attacker.attack();
     defender.health -= damage;
     updateHealthBar(defender, healthBarDefender);
+    updateBattleLog(attacker.name, defender.name, damage, defender.health);
 }
 
 // Получаем элементы прогрессбаров
@@ -97,4 +100,39 @@ document.getElementById('attack2').addEventListener('click', function() {
 // Специальная атака Charmander
 document.getElementById('special2').addEventListener('click', function() {
     battle(charmander, pikachu, health1, 'pokemon2', 'pokemon1');
+});
+
+// Функция для обновления лога боя
+function updateBattleLog(attacker, defender, damage, remainingHealth) {
+    const logsContainer = document.getElementById('logs');
+    const logMessage = document.createElement('div');
+    logMessage.innerHTML = `
+        <p><strong>${attacker}</strong> атаковал <strong>${defender}</strong> и нанес <strong>${damage}</strong> урона. У ${defender} осталось <strong>${remainingHealth}</strong> здоровья.</p>
+    `;
+    logsContainer.insertBefore(logMessage, logsContainer.firstChild); // Вставляем новый лог в начало
+}
+
+
+// Функція для підрахунку кліків з використанням замикання
+function createClickCounter(maxClicks, button) {
+    let clickCount = 0;
+
+    return function () {
+        if (clickCount < maxClicks) {
+            clickCount++;
+            console.log(`Кнопка "{button.textContent}" натиснута {clickCount} разів. Залишилось: {maxClicks - clickCount}`);
+        } else {
+            console.log(`Ліміт натискань для кнопки "{button.textContent}" перевищено.`);
+            button.disabled = true;  // Деактивуємо кнопку після перевищення ліміту
+            alert(`Ліміт натискань для "{button.textContent}" досягнуто. Кнопка деактивована.`);
+        }
+    };
+}
+
+// Знаходимо всі кнопки на сторінці та додаємо їм обробники
+document.querySelectorAll('button').forEach((button) => {
+    const maxClicks = 6;  // Встановлюємо ліміт натискань
+    const clickHandler = createClickCounter(maxClicks, button);
+
+    button.addEventListener('click', clickHandler);
 });
